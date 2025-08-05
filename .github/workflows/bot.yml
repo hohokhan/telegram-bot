@@ -1,0 +1,29 @@
+name: Run Telegram Bot Daily
+
+on:
+  schedule:
+    - cron: '30 16 * * *' # هر روز ساعت 20:00 به وقت ایران (16:30 UTC)
+  workflow_dispatch: # اجرا دستی
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run bot script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          python bot.py
